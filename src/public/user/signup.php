@@ -12,7 +12,7 @@ session_start();
 
     <h1 style="text-align:center;margin-top: 2em;margin-bottom: 1em;" class="h1_log">会員登録</h1>
 <form action="/user/signup_complete.php" method="post" class="form_log">
-     <input type="username" name="username" class="textbox un" placeholder="User Name"><br>
+     <input type="text" name="name" class="textbox un" placeholder="User Name"><br>
      <input type="email" name="email" class="textbox un" placeholder="Email"><br>
      <input type="password" name="password" class="textbox pass" placeholder="Password"><br>
      <input type="password" name="password_check" class="textbox pass" placeholder="Password確認"><br>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$username = $_POST['username'];
+$name = $_POST['name'];
 $email = $_POST['email'];
 $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 $password_check = $_POST['password_check'];
@@ -34,15 +34,19 @@ $statement->execute();
 $emails = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 $errors3 = [];
-$value_count = array_count_values(array_column($emails,'email'));
-$max = max($value_count); 
-if ($max != 1) {
-  $errors3[] = 'すでに保存されているメールアドレスです';
-  $_SESSION['errors3'] = $errors3;
-} 
+$email_column = array_column($emails,'email'); 
+$value_count = array_count_values($email_column);
+$max = 0; 
+if (!empty($value_count)) {
+  $max = max($value_count);
+}
 
+if ($max > 1) {
+    $errors3[] = 'すでに保存されているメールアドレスです';
+    $_SESSION['errors3'] = $errors3;
+}
 
-if(isset($_POST['username'])) {
+if(isset($_POST['name'])) {
   $dbUserName = 'root';
   $dbPassword = 'password';
   $pdo = new PDO(
@@ -52,14 +56,15 @@ if(isset($_POST['username'])) {
   );
 
 $stmt = $pdo->prepare("INSERT INTO users(
-	username, email, password
+    name, email, password
 ) VALUES (
-	:username, :email, :password
+    :name, :email, :password
 )");
 
-$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+$stmt->bindParam(':name', $name, PDO::PARAM_STR);
 $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-$stmt->bindParam(':password', password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
+$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+$stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
 $res = $stmt->execute();
 }
 ?>
@@ -73,7 +78,6 @@ $res = $stmt->execute();
  
 <body>
   <div>
-
    <?php if (!empty($_SESSION['errors'] ) || !empty($_SESSION['errors2'])|| !empty($_SESSION['errors3'] )): ?>
       <meta http-equiv="refresh" content="1;URL=http://localhost:8080/user/signup.php">
    <?php endif; ?>

@@ -16,22 +16,27 @@ if (empty($errors)) {
         $dbPassword
     );
 
-    $stmt = " SELECT
-    *
-    FROM users where email = '$email' ";
-    $stmt = $pdo->prepare($stmt);
-    $stmt->bindValue('email', $email, PDO::PARAM_INT);
+    //dbにuserテーブルを追加
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach ($users as $user) {
-        $singin_password = $user['password'];
-    }
-    if (!password_verify($password, $singin_password)) {
+    // ユーザーが存在するか確認するコード
+    if (count($users) > 0) {
+        $singin_password = $users[0]['password'];
+        if (!password_verify($password, $singin_password)) {
+            $errors[] = 'メールアドレスまたはパスワードが違います';
+        }
+    } else {
+        // ユーザーが存在しない場合のエラーメッセージ
         $errors[] = 'メールアドレスまたはパスワードが違います';
     }
 }
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html>
