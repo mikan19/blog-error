@@ -4,6 +4,7 @@ session_start();
 $name = $_POST['name'];
 $email = $_POST['email'];
 $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+//修正箇所①
 $password_check = password_hash($_POST['password_check'], PASSWORD_DEFAULT);
 
 $errors = [];
@@ -63,10 +64,12 @@ $stmt = $pdo->prepare("INSERT INTO users(
 
 $stmt->bindParam(':name', $name, PDO::PARAM_STR);
 $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+//修正箇所②
 $stmt->bindParam(':password', $password, PDO::PARAM_STR);
 $res = $stmt->execute();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>
