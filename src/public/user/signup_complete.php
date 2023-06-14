@@ -21,7 +21,7 @@ if ($password != $password_check) {
 $dbUserName = 'root';
 $dbPassword = 'password';
 $pdo = new PDO(
-    'mysql:host=mysql; dbname=blog; charset=utf8',
+    'mysql:host=mysql; dbname=memo; charset=utf8',
     $dbUserName,
     $dbPassword
 );
